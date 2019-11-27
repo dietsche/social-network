@@ -4,7 +4,16 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { Form } from "./start";
 
-export default class Register extends React.Component {
+const InputField = styled.input`
+    margin: 15px 0 5px 6px;
+    padding: 5px;
+    border-radius: 3px;
+    width: 220px;
+    height: 26px;
+    font-size: 17px;
+`;
+
+export default class Login extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};
@@ -17,20 +26,19 @@ export default class Register extends React.Component {
         console.log(this.last);
         console.log(this.password);
         axios
-            .post("/registration", {
+            .post("/login", {
                 email: this.email, //State ist eigentliche for detecting changes on screen and reacting
-                password: this.password,
-                first: this.first,
-                last: this.last
+                password: this.password
                 // image: this.image,
                 // bio: this.bio
             })
             .then(({ data }) => {
-                console.log("registration.js: axios-post .then");
+                console.log("login!!!");
                 if (data.success) {
-                    console.log("...");
+                    console.log("data.sucess");
                     location.replace("/"); //replace> page in history is replaced in history > you cant go back in browser!!!!
                 } else {
+                    console.log("!!!data.sucess");
                     this.setState({
                         error: true
                     });
@@ -45,18 +53,11 @@ export default class Register extends React.Component {
     render() {
         return (
             <Form>
-                <input
-                    name="first"
-                    type="text"
-                    placeholder="First Name"
-                    onChange={e => this.handleChange(e)}
-                />
-                <input
-                    name="last"
-                    type="text"
-                    placeholder="Last Name"
-                    onChange={e => this.handleChange(e)}
-                />
+                {this.state.error && (
+                    <div className="error">
+                        Something went wrong. Please try again!
+                    </div>
+                )}
                 <input
                     name="email"
                     type="email"
@@ -69,17 +70,10 @@ export default class Register extends React.Component {
                     placeholder="Password"
                     onChange={e => this.handleChange(e)}
                 />
-                {this.state.error && (
-                    <div className="error">
-                        Something went wrong. Please try again!
-                    </div>
-                )}
-
                 <button onClick={() => this.submit()}>Submit</button>
-
-                <div className="switch">
+                <div>
                     {" "}
-                    Already a member? Please <Link to="/login">log in!</Link>
+                    Already a member? Please <Link to="/">register!</Link>{" "}
                 </div>
             </Form>
         );

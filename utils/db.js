@@ -11,3 +11,7 @@ exports.addUserData = function(first, last, email, password) {
         [first, last, email, password]
     );
 };
+
+exports.getHashedPassword = function(email) {
+    return db.query(`SELECT password, id FROM users WHERE email = $1`, [email]);
+};

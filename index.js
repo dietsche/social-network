@@ -4,6 +4,7 @@ const compression = require("compression");
 const cookieSession = require("cookie-session");
 const db = require("./utils/db"); //we need it???
 const { hash, compare } = require("./utils/bc");
+const csurf = require("csurf");
 
 //add bodyParsing!?
 
@@ -19,6 +20,13 @@ app.use(
         maxAge: 1000 * 60 * 60 * 24 * 14
     })
 );
+
+app.use(csurf());
+
+app.use(function(req, res, next) {
+    res.cookie("mytoken", req.csrfToken());
+    next();
+});
 
 if (process.env.NODE_ENV != "production") {
     app.use(
@@ -58,15 +66,16 @@ app.post("/registration", (req, res) => {
                 req.body["last"],
                 req.body["email"],
                 hashedPassword
-            ).then(result => {
-                req.session.userId = result.rows[0].id;
-                res.json({
-                    success: true
+            )
+                .then(result => {
+                    req.session.userId = result.rows[0].id;
+                    res.json({
+                        success: true
+                    });
+                })
+                .catch(err => {
+                    console.log(err);
                 });
-            });
-            // .catch(err => {
-            //     console.log(err);
-            // });
         })
         .catch(err => {
             res.json({
@@ -74,6 +83,51 @@ app.post("/registration", (req, res) => {
             });
 
             console.log(err);
+        });
+});
+
+//         .catch(err => {
+//             res.render("login", {
+//                 layout: "main",
+//                 helpers: {
+//                     showError() {
+//                         return "Something went wrong! Please try again and fill out all fields.";
+//                     }
+//                 }
+//             });
+//             console.log(err);
+//         });
+// });
+
+app.post("/login", (req, res) => {
+    console.log("server: post-login runs");
+    hash(req.body["password"]);
+    db.getHashedPassword(req.body["email"])
+        .then(result => {
+            console.log("getHashedPassword completed");
+            let savedPassword = result.rows[0].password;
+            let userId = result.rows[0].id;
+            console.log("savedPassword: ", savedPassword);
+            console.log("userId: ", userId);
+
+            compare(req.body["password"], savedPassword).then(result => {
+                console.log(result);
+                if (result == true) {
+                    req.session.userId = userId;
+                    res.json({
+                        success: true
+                    });
+                } else if (result == false) {
+                    res.json({
+                        success: false
+                    });
+                }
+            });
+        })
+        .catch(err => {
+            res.json({
+                success: false
+            });
         });
 });
 

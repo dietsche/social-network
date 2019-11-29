@@ -85,38 +85,3 @@ export default class Register extends React.Component {
         );
     }
 }
-
-// submit() {
-//     axios.post("/register", {
-//         email: this.state.email, //State ist eigentliche for detecting changes on screen and reacting
-//         password: this.state.password,
-//         first: ""
-//     }).then(({data}) => {
-//         if (data.success) {
-//             console.log("...");
-//             location.replace('https://www.google.com'); //replace> page in history is replaced in history > you cant go back in browser!!!!
-//
-//         } else {
-//             this.setState({
-//                 error: true
-//             })
-//         }
-//     });  //hier evtl noch catch mit error-meldung: aber nur für den Fall das z.B. Server nicht läuft
-// }
-// handleChange(inputElement) {
-//     this.setState({ [inputElement.name]: inputElement.value });
-// }
-// render() {
-//     return (
-//         <div>
-//             {this.state.error && <div className="error">Oops!</div>}
-//             <input name="first" onChange={e => this.handleChange()} />
-//             <input name="last" />
-//             <input name="email" />
-//             <input name="password" />
-//             <button onClick={e => this.submit()}></button>
-//         </div>
-//     );
-// }
-
-//sauberer Version

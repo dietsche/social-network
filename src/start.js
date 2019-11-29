@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { createGlobalStyle } from "styled-components";
 
 import Welcome from "./welcome";
+import App from "./app";
 
 export const Form = styled.div`
     display: flex;
@@ -40,6 +41,9 @@ const GlobalStyle = createGlobalStyle`
         font-family: Arial;
         background-color: rgb(241, 214, 171);
     }
+    textarea, input, a {
+        cursor: pointer;
+    }
 `;
 
 let elem = (
@@ -50,7 +54,12 @@ let elem = (
 );
 
 if (location.pathname != "/welcome") {
-    elem = <img src="/img/robin.png" alt="Logo" />;
+    elem = (
+        <React.Fragment>
+            <App />
+            <GlobalStyle />
+        </React.Fragment>
+    );
 }
 
 ReactDOM.render(elem, document.querySelector("main"));

@@ -41,7 +41,7 @@ const GlobalStyle = createGlobalStyle`
         font-family: Arial;
         background-color: rgb(241, 214, 171);
     }
-    textarea, input, a {
+    button, a {
         cursor: pointer;
     }
 `;

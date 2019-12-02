@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { ProfilePic } from "./profilepic";
 import BioEditor from "./bioeditor";
 
-const ProfileContainer = styled.div`
+export const ProfileContainer = styled.div`
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -15,15 +15,14 @@ const ProfileContainer = styled.div`
     }
 `;
 
-const PicFrame = styled.div`
+export const PicFrame = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
     border: 2px white solid;
-    width: 200px;
+    max-width: 250px;
     overflow: hidden;
     margin-right: 20px;
-    cursor: pointer;
 `;
 
 export function Profile({ first, last, image, bio, updateBio, toggleModal }) {

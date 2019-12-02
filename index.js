@@ -119,7 +119,8 @@ app.post("/login", async (req, res) => {
     }
 });
 
-app.get("/user", async (req, res) => {
+app.get("/api/user", async (req, res) => {
+    //add api/ everywhere
     console.log("get user route running");
     try {
         let userId = req.session.userId;
@@ -135,6 +136,36 @@ app.get("/user", async (req, res) => {
             image: image,
             bio: bio
         });
+    } catch (error) {
+        res.json({
+            success: false
+        });
+    }
+});
+
+app.get("/api/otheruser/:id", async (req, res) => {
+    //add api/ everywhere
+    console.log("get otheruser route running");
+    try {
+        let userId = req.session.userId;
+        let otherId = req.params.id;
+        if (userId != otherId) {
+            let otherUserData = await db.getUserData(otherId);
+            console.log("otherUserData:", otherUserData.rows[0]);
+            let { first, last, image, bio } = otherUserData.rows[0];
+            console.log("first ", first);
+            res.json({
+                success: true,
+                first: first,
+                last: last,
+                image: image,
+                bio: bio
+            });
+        } else {
+            res.json({
+                success: false
+            });
+        }
     } catch (error) {
         res.json({
             success: false

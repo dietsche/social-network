@@ -173,6 +173,41 @@ app.get("/api/otheruser/:id", async (req, res) => {
     }
 });
 
+app.get("/api/findlatestusers", async (req, res) => {
+    //add api/ everywhere
+    console.log("findlatestusers route running");
+    try {
+        let latestUsers = await db.getLatestUsers();
+        console.log("latestUsers:", latestUsers.rows);
+        res.json({
+            success: true,
+            latestUsers: latestUsers.rows
+        });
+    } catch (error) {
+        res.json({
+            success: false
+        });
+    }
+});
+
+app.get("/api/searchusers/:str", async (req, res) => {
+    console.log("seachusers route running");
+    console.log(req.params.str);
+    let str = req.params.str;
+    try {
+        let resultUsers = await db.searchUsers(str);
+        console.log("resultUsers:", resultUsers.rows);
+        res.json({
+            success: true,
+            searchResult: resultUsers.rows
+        });
+    } catch (error) {
+        res.json({
+            success: false
+        });
+    }
+});
+
 app.post("/uploadImage", uploader.single("file"), s3.upload, (req, res) => {
     console.log("req.file.filename: ", req.file.filename);
     // sconst { title } = req.body;

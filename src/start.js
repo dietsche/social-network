@@ -39,7 +39,7 @@ const GlobalStyle = createGlobalStyle`
     body {
         margin: 0;
         font-family: Arial;
-        background-color: rgb(241, 214, 171);
+        background-color: rgb(240, 240, 240);
     }
     button, a {
         cursor: pointer;

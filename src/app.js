@@ -1,22 +1,36 @@
 import React from "react";
 import axios from "./axios"; //not directly from axis, but our own version
-import { BrowserRouter, Route } from "react-router-dom"; //Do I need it here???
+import { BrowserRouter, Route } from "react-router-dom";
 import styled from "styled-components";
 import { Profile } from "./profile";
 import { ProfilePic } from "./profilepic";
 import Uploader from "./uploader";
 import { OtherProfile } from "./otherprofile";
+import { FindPeople } from "./findpeople";
+
+const AppContainer = styled.div`
+    height: 100vh;
+    overflow-y: hidden;
+`;
 
 const Header = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    height: 55px;
-    background-color: rgba(50, 50, 50, 0.5);
-    padding: 15px;
+    height: 50px;
+    background-color: rgb(83, 125, 145);
+    padding: 12px;
     > img {
-        height: 75%;
-        margin: 6px;
+        height: 72%;
+        margin: 4px;
+    }
+`;
+const Navigation = styled.div`
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    div {
+        margin: auto 20px;
     }
 `;
 
@@ -24,7 +38,7 @@ const PicFrame = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 4px darkred solid;
+    border: 3px rgb(150, 150, 150) solid;
     background-color: white;
     border-radius: 50%;
     width: 50px;
@@ -103,24 +117,29 @@ export default class App extends React.Component {
     }
 
     render() {
-        if (!this.state.image) {
+        if (!this.state.first) {
             //Seite lädt erst wenn INhalt da ist!!!! HIER AUCH SPINNER MÖGLICH!!!
             return null;
         }
         return (
             <React.Fragment>
                 <BrowserRouter>
-                    <div>
+                    <AppContainer>
                         <Header>
                             <img src="/img/robin.png" />
-                            <PicFrame onClick={this.toggleModal}>
-                                <ProfilePic
-                                    toggleModal={this.toggleModal}
-                                    first={this.state.first}
-                                    last={this.state.last}
-                                    image={this.state.image}
-                                />
-                            </PicFrame>
+                            <Navigation>
+                                <div>My Profile</div>
+                                <div>Find Users</div>
+
+                                <PicFrame onClick={this.toggleModal}>
+                                    <ProfilePic
+                                        toggleModal={this.toggleModal}
+                                        first={this.state.first}
+                                        last={this.state.last}
+                                        image={this.state.image}
+                                    />
+                                </PicFrame>
+                            </Navigation>
                         </Header>
 
                         <Route
@@ -138,15 +157,22 @@ export default class App extends React.Component {
                             )}
                         />
                         <Route path="/user/:id" component={OtherProfile} />
-                    </div>
-                </BrowserRouter>
 
-                {this.state.uploaderIsVisible && (
-                    <Uploader
-                        toggleModal={this.toggleModal}
-                        sendImageToApp={this.getImageFromUploader}
-                    />
-                )}
+                        <Route
+                            exact
+                            path="/findpeople"
+                            render={() => <FindPeople first={this.state.id} />}
+                        />
+                        <Route path="/user/:id" component={OtherProfile} />
+                    </AppContainer>
+
+                    {this.state.uploaderIsVisible && (
+                        <Uploader
+                            toggleModal={this.toggleModal}
+                            sendImageToApp={this.getImageFromUploader}
+                        />
+                    )}
+                </BrowserRouter>
             </React.Fragment>
         );
     }

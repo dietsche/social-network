@@ -1,9 +1,14 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { ThemeProvider } from "styled-components";
 import { ProfilePic } from "./profilepic";
 import BioEditor from "./bioeditor";
 
+const theme = {
+    primary: "rgb(240,240,240)",
+    secondary: "green"
+};
 export const ProfileContainer = styled.div`
+    background: ${props => props.theme.primary};
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -28,20 +33,22 @@ export const PicFrame = styled.div`
 export function Profile({ first, last, image, bio, updateBio, toggleModal }) {
     console.log("profile running ");
     return (
-        <ProfileContainer>
-            <h1>
-                {" "}
-                {first} {last}
-            </h1>
-            <PicFrame onClick={toggleModal}>
-                <ProfilePic first={first} last={last} image={image} />
-            </PicFrame>
-            <BioEditor
-                first={first}
-                last={last}
-                bio={bio}
-                updateBio={updateBio}
-            />
-        </ProfileContainer>
+        <ThemeProvider theme={theme}>
+            <ProfileContainer>
+                <h1>
+                    {" "}
+                    {first} {last}
+                </h1>
+                <PicFrame onClick={toggleModal}>
+                    <ProfilePic first={first} last={last} image={image} />
+                </PicFrame>
+                <BioEditor
+                    first={first}
+                    last={last}
+                    bio={bio}
+                    updateBio={updateBio}
+                />
+            </ProfileContainer>
+        </ThemeProvider>
     );
 }

@@ -33,3 +33,16 @@ exports.updateBio = function(bioText, userId) {
         userId
     ]);
 };
+
+exports.getLatestUsers = function() {
+    return db.query(
+        `SELECT first, last, id, bio, image FROM users ORDER BY id DESC LIMIT 3`
+    );
+};
+
+exports.searchUsers = function(str) {
+    return db.query(
+        `SELECT first, last, id, bio, image FROM users WHERE first ILIKE $1 OR last ILIKE $1 LIMIT 20`,
+        [str + "%"]
+    );
+};

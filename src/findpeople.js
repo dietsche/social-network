@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled, { ThemeProvider } from "styled-components";
 import axios from "./axios";
+// import { Link } from "react-router";
 
 export const ContainerFindPeople = styled.div`
     display: flex;
@@ -111,7 +112,7 @@ export function FindPeople() {
                     {latestUsers.map(user => (
                         <ContainerUser key={user.id}>
                             <div className="image-container">
-                                <img src={user.image} />
+                                <img src={user.image} />{" "}
                             </div>
                             <div className="name-container">
                                 <p>

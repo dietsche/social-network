@@ -88,7 +88,10 @@ export default class BioEditor extends React.Component {
     }
 
     sendUpdateInfo() {
-        this.props.updateBio(this.state.bioText);
+        this.state.bioText
+            ? this.props.updateBio(this.state.bioText)
+            : this.props.updateBio(this.props.bio);
+
         this.setState({ editingMode: false }, () => {
             console.log("editingMode set to false");
         });

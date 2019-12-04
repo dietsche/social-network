@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import axios from "./axios";
 import { ProfileContainer, PicFrame } from "./profile";
+import { FriendButton } from "./friendship-button";
 
 const OtherBio = styled.div`
     display: flex;
@@ -66,6 +67,10 @@ export class OtherProfile extends React.Component {
                     <img src={this.state.image} />
                 </PicFrame>
                 <OtherBio>{this.state.bio}</OtherBio>
+                <FriendButton
+                    otherId={this.props.match.params.id}
+                    ownId={this.state.id}
+                />
             </ProfileContainer>
         );
     }

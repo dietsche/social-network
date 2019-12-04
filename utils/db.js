@@ -46,3 +46,31 @@ exports.searchUsers = function(str) {
         [str + "%"]
     );
 };
+
+exports.getFriendshipStatus = function(otherId, ownId) {
+    return db.query(
+        `SELECT * FROM friendships WHERE (receiver_id = $1 AND sender_id = $2) OR (receiver_id = $2 AND sender_id = $1)`,
+        [otherId, ownId]
+    );
+};
+
+exports.sendFriendRequest = function(otherId, ownId) {
+    return db.query(
+        `INSERT INTO friendships (receiver_id, sender_id) VALUES ($1, $2) RETURNING *`,
+        [otherId, ownId]
+    );
+};
+
+exports.acceptFriendRequest = function(otherId, ownId) {
+    return db.query(
+        `UPDATE friendships SET accepted = true WHERE (receiver_id = $2 AND sender_id = $1) RETURNING *`,
+        [otherId, ownId]
+    );
+};
+
+exports.endFriendship = function(otherId, ownId) {
+    return db.query(
+        `DELETE FROM friendships WHERE (receiver_id = $1 AND sender_id = $2) OR (receiver_id = $2 AND sender_id = $1) RETURNING *`,
+        [otherId, ownId]
+    );
+};

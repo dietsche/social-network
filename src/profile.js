@@ -25,13 +25,27 @@ export const PicFrame = styled.div`
     justify-content: center;
     align-items: center;
     border: 2px white solid;
-    max-width: 250px;
+    width: 250px;
+    height: 250px
     overflow: hidden;
     margin-right: 20px;
+    > img {
+        object-fit: contain;
+        min-width: 100%;
+        min-height: 100%;
+    }
 `;
 
-export function Profile({ first, last, image, bio, updateBio, toggleModal }) {
-    console.log("profile running ");
+export function Profile({
+    first,
+    last,
+    image,
+    bio,
+    updateBio,
+    id,
+    toggleModal
+}) {
+    console.log("profile running; currentID: ", id);
     return (
         <ThemeProvider theme={theme}>
             <ProfileContainer>

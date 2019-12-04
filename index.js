@@ -208,6 +208,67 @@ app.get("/api/searchusers/:str", async (req, res) => {
     }
 });
 
+app.get("/friendshipstatus/:otherId", async (req, res) => {
+    console.log("friendship route running");
+    let otherId = req.params.otherId;
+    let ownId = req.session.userId;
+    console.log(otherId, ownId);
+    try {
+        let resultFriendship = await db.getFriendshipStatus(otherId, ownId);
+        console.log("resultFriendship: ", resultFriendship);
+        res.json({
+            resultFriendship: resultFriendship.rows,
+            ownId: ownId,
+            success: true
+        });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false });
+    }
+});
+
+app.post("/api/send-friend-request/:otherId", async (req, res) => {
+    console.log("send-friend-request running");
+    let otherId = req.params.otherId;
+    let ownId = req.session.userId;
+    try {
+        let sendFriendRequest = await db.sendFriendRequest(otherId, ownId);
+        console.log("result sendFriendRequest: ", sendFriendRequest);
+        res.json({ success: true });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false });
+    }
+});
+
+app.post("/api/accept-friend-request/:otherId", async (req, res) => {
+    console.log("accept-friend-request running");
+    let otherId = req.params.otherId;
+    let ownId = req.session.userId;
+    try {
+        let acceptFriendRequest = await db.acceptFriendRequest(otherId, ownId);
+        console.log("result acceptFriendRequest: ", acceptFriendRequest);
+        res.json({ success: true });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false });
+    }
+});
+
+app.post("/api/end-friendship/:otherId", async (req, res) => {
+    console.log("end-friendship running");
+    let otherId = req.params.otherId;
+    let ownId = req.session.userId;
+    try {
+        let endFriendship = await db.endFriendship(otherId, ownId);
+        console.log("result endFriendship: ", endFriendship);
+        res.json({ success: true });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false });
+    }
+});
+
 app.post("/uploadImage", uploader.single("file"), s3.upload, (req, res) => {
     console.log("req.file.filename: ", req.file.filename);
     // sconst { title } = req.body;

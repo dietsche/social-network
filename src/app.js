@@ -21,7 +21,7 @@ const Header = styled.div`
     background-color: rgb(83, 125, 145);
     padding: 12px;
     > img {
-        height: 72%;
+        height: 45px;
         margin: 4px;
     }
 `;
@@ -47,7 +47,7 @@ const PicFrame = styled.div`
     margin-right: 20px;
     cursor: pointer;
     img {
-        object-fit: fill;
+        object-fit: contain;
         min-width: 100%;
         min-height: 100%;
     }
@@ -117,6 +117,7 @@ export default class App extends React.Component {
     }
 
     render() {
+        //const {id, ...} =this.state
         if (!this.state.first) {
             //Seite lädt erst wenn INhalt da ist!!!! HIER AUCH SPINNER MÖGLICH!!!
             return null;
@@ -126,7 +127,7 @@ export default class App extends React.Component {
                 <BrowserRouter>
                     <AppContainer>
                         <Header>
-                            <img src="/img/robin.png" />
+                            <img src="/img/logo.png" />
                             <Navigation>
                                 <div>My Profile</div>
                                 <div>Find Users</div>
@@ -147,6 +148,7 @@ export default class App extends React.Component {
                             path="/"
                             render={() => (
                                 <Profile
+                                    id={this.state.id}
                                     first={this.state.first}
                                     last={this.state.last}
                                     image={this.state.image}
@@ -156,7 +158,6 @@ export default class App extends React.Component {
                                 />
                             )}
                         />
-                        <Route path="/user/:id" component={OtherProfile} />
 
                         <Route
                             exact

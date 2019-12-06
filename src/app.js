@@ -1,12 +1,13 @@
 import React from "react";
 import axios from "./axios"; //not directly from axis, but our own version
-import { BrowserRouter, Route } from "react-router-dom";
+import { BrowserRouter, Route, NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { Profile } from "./profile";
 import { ProfilePic } from "./profilepic";
 import Uploader from "./uploader";
 import { OtherProfile } from "./otherprofile";
 import { FindPeople } from "./findpeople";
+import Friends from "./friends";
 
 const AppContainer = styled.div`
     height: 100vh;
@@ -20,9 +21,10 @@ const Header = styled.div`
     height: 50px;
     background-color: rgb(83, 125, 145);
     padding: 12px;
+    margin-bottom: 30px;
     > img {
-        height: 45px;
-        margin: 4px;
+        height: 50px;
+        margin-left: 5px;
     }
 `;
 const Navigation = styled.div`
@@ -41,8 +43,8 @@ const PicFrame = styled.div`
     border: 3px rgb(150, 150, 150) solid;
     background-color: white;
     border-radius: 50%;
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
     overflow: hidden;
     margin-right: 20px;
     cursor: pointer;
@@ -129,8 +131,72 @@ export default class App extends React.Component {
                         <Header>
                             <img src="/img/logo.png" />
                             <Navigation>
-                                <div>My Profile</div>
-                                <div>Find Users</div>
+                                <div>
+                                    {" "}
+                                    <NavLink
+                                        exact
+                                        to="/"
+                                        style={{
+                                            color: "white",
+                                            textDecoration: "none"
+                                        }}
+                                        activeStyle={{
+                                            color: "black",
+                                            textDecoration: "none"
+                                        }}
+                                    >
+                                        My Profile
+                                    </NavLink>
+                                </div>
+                                <div>
+                                    {" "}
+                                    <NavLink
+                                        exact
+                                        to="/friends"
+                                        style={{
+                                            color: "white",
+                                            textDecoration: "none"
+                                        }}
+                                        activeStyle={{
+                                            color: "black",
+                                            textDecoration: "none"
+                                        }}
+                                    >
+                                        Friends
+                                    </NavLink>
+                                </div>
+
+                                <div>
+                                    {" "}
+                                    <NavLink
+                                        to="/findpeople"
+                                        style={{
+                                            color: "white",
+                                            textDecoration: "none"
+                                        }}
+                                        activeStyle={{
+                                            color: "black",
+                                            textDecoration: "none"
+                                        }}
+                                    >
+                                        Search
+                                    </NavLink>
+                                </div>
+                                <div>
+                                    <a
+                                        href="/logout"
+                                        style={{
+                                            color: "white",
+                                            textDecoration: "none"
+                                        }}
+                                        activeStyle={{
+                                            color: "black",
+                                            textDecoration: "none"
+                                        }}
+                                    >
+                                        Logout
+                                    </a>
+                                </div>
 
                                 <PicFrame onClick={this.toggleModal}>
                                     <ProfilePic
@@ -164,6 +230,12 @@ export default class App extends React.Component {
                             path="/findpeople"
                             render={() => <FindPeople first={this.state.id} />}
                         />
+                        <Route
+                            exact
+                            path="/friends"
+                            render={() => <Friends />}
+                        />
+
                         <Route path="/user/:id" component={OtherProfile} />
                     </AppContainer>
 

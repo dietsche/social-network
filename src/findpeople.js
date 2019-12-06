@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled, { ThemeProvider } from "styled-components";
 import axios from "./axios";
+import { NavLink } from "react-router-dom";
+
 // import { Link } from "react-router";
 
 export const ContainerFindPeople = styled.div`
@@ -19,8 +21,11 @@ export const FindUsers = styled.div`
         height: 26px;
         font-size: 17px;
     }
+    > h2 {
+        font-size: 16px;
+        margin: 20px auto;
+    }
 `;
-export const LatestUsers = styled.div``;
 
 export const ContainerUser = styled.div`
     display: flex;
@@ -30,6 +35,8 @@ export const ContainerUser = styled.div`
     min-width: 300px;
     background-color: white;
     margin: 10px auto;
+    box-shadow: 2px 2px 3px;
+
     > div {
         height: 100px;
         width: 100px;
@@ -39,7 +46,7 @@ export const ContainerUser = styled.div`
         align-items: center;
         > img {
             min-height: 100%;
-            min-width: 100%;
+            width: 100%;
             object-fit: cover;
         }
     }
@@ -94,9 +101,42 @@ export function FindPeople() {
                     />
                     {searchResult &&
                         searchResult.map(user => (
-                            <ContainerUser key={user.id}>
+                            <NavLink
+                                key={user.id}
+                                to={`/user/${user.id}`}
+                                style={{
+                                    color: "black",
+                                    textDecoration: "none"
+                                }}
+                            >
+                                <ContainerUser>
+                                    <div className="image-container">
+                                        <img src={user.image} />
+                                    </div>
+                                    <div className="name-container">
+                                        <p>
+                                            {user.first} {user.last}
+                                        </p>
+                                    </div>
+                                </ContainerUser>
+                            </NavLink>
+                        ))}
+                </FindUsers>
+
+                <FindUsers>
+                    <h2> Joined recently </h2>{" "}
+                    {latestUsers.map(user => (
+                        <NavLink
+                            key={user.id}
+                            to={`/user/${user.id}`}
+                            style={{
+                                color: "black",
+                                textDecoration: "none"
+                            }}
+                        >
+                            <ContainerUser>
                                 <div className="image-container">
-                                    <img src={user.image} />
+                                    <img src={user.image} />{" "}
                                 </div>
                                 <div className="name-container">
                                     <p>
@@ -104,24 +144,9 @@ export function FindPeople() {
                                     </p>
                                 </div>
                             </ContainerUser>
-                        ))}
-                </FindUsers>
-
-                <LatestUsers>
-                    <h2> Joined recently </h2>{" "}
-                    {latestUsers.map(user => (
-                        <ContainerUser key={user.id}>
-                            <div className="image-container">
-                                <img src={user.image} />{" "}
-                            </div>
-                            <div className="name-container">
-                                <p>
-                                    {user.first} {user.last}
-                                </p>
-                            </div>
-                        </ContainerUser>
+                        </NavLink>
                     ))}
-                </LatestUsers>
+                </FindUsers>
             </ContainerFindPeople>
         </React.Fragment>
     );

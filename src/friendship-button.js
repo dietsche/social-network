@@ -3,18 +3,17 @@ import axios from "./axios";
 import styled from "styled-components";
 
 const Button = styled.button`
-    background-color: rgb(220, 220, 220);
+    background-color: rgb(90, 160, 120);
     width: 110px;
     height: 60px;
-    border: 3px rgb(111, 185, 143) solid;
     border-radius: 3px;
     margin: 10px;
     font-family: Arial;
-    color: rgb(40, 36, 30);
+    color: white;
     font-size: 14px;
     cursor: pointer;
     :hover {
-        background-color: rgb(210, 210, 210);
+        background-color: rgb(70, 140, 100);
     }
 `;
 

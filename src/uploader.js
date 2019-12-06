@@ -138,7 +138,7 @@ export default class Uploader extends React.Component {
                     <label htmlFor="file">
                         {imageLoaded ? (
                             <div>
-                                <img src="/img/upload.png" alt="" />
+                                <img src="/img/check.png" alt="" />
                                 <span>Image loaded</span>
                             </div>
                         ) : (

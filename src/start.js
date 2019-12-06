@@ -2,9 +2,18 @@ import React from "react";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
 import { createGlobalStyle } from "styled-components";
-
 import Welcome from "./welcome";
 import App from "./app";
+import { createStore, applyMiddleware } from "redux";
+import reduxPromise from "redux-promise";
+import { composeWithDevTools } from "redux-devtools-extension";
+import reducer from "./reducer";
+import { Provider } from "react-redux";
+
+const store = createStore(
+    reducer,
+    composeWithDevTools(applyMiddleware(reduxPromise))
+);
 
 export const Form = styled.div`
     display: flex;
@@ -55,11 +64,16 @@ let elem = (
 
 if (location.pathname != "/welcome") {
     elem = (
-        <React.Fragment>
+        <Provider store={store}>
             <App />
             <GlobalStyle />
-        </React.Fragment>
+        </Provider>
     );
 }
+// change to:
+// <Provider store={store}>
+//     <App />
+//     <GlobalStyle />
+// </Provider>
 
 ReactDOM.render(elem, document.querySelector("main"));

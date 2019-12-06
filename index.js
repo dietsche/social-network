@@ -306,6 +306,28 @@ app.post("/updateBio", async (req, res) => {
     }
 });
 
+app.get("/api/friends-wannabees", async (req, res) => {
+    console.log("friends-wannabees running");
+    let ownId = req.session.userId;
+
+    try {
+        let friendsAndWannabees = await db.getFriendsAndWannabees(ownId);
+        console.log("resultFriendship: ", friendsAndWannabees);
+        res.json({
+            friendsAndWannabees: friendsAndWannabees.rows,
+            success: true
+        });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false });
+    }
+});
+
+app.get("/logout", function(req, res) {
+    req.session = null;
+    res.redirect("/welcome");
+});
+
 app.get("*", function(req, res) {
     if (!req.session.userId) {
         res.redirect("/welcome");

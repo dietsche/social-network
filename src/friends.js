@@ -61,6 +61,17 @@ export const PersonBox = styled.div`
     > .text-container {
         width: 200px;
     }
+    button {
+        background-color: rgb(220, 220, 220);
+        height: 28px;
+        border: 3px rgba(0, 0, 0, 0) solid;
+        border-radius: 3px;
+        margin: 10px;
+        font-family: Arial;
+        color: rgb(40, 36, 30);
+        font-size: 15px;
+        cursor: pointer;
+    }
 `;
 
 export default function Friends() {
@@ -75,8 +86,6 @@ export default function Friends() {
     });
 
     const wannabees = useSelector(state => {
-        //           console.log('in function passed to useSelector', state)
-
         return (
             state.friendsAndWannabees &&
             state.friendsAndWannabees.filter(user => user.accepted == false)
@@ -97,7 +106,7 @@ export default function Friends() {
 
     return (
         <React.Fragment>
-            {wannabees && (
+            {wannabees && wannabees.length != 0 && (
                 <Headline>
                     <h2>These people want to add you as a friend</h2>
                 </Headline>
@@ -126,11 +135,13 @@ export default function Friends() {
                         </PersonBox>
                     ))}
             </WannabeesContainer>
-            {friends && (
-                <Headline>
+            <Headline>
+                {friends && friends.length != 0 ? (
                     <h2>These are your friends</h2>
-                </Headline>
-            )}
+                ) : (
+                    <h2> No friends... </h2>
+                )}
+            </Headline>
             <FriendsContainer>
                 {friends &&
                     friends.map(friend => (

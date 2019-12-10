@@ -8,6 +8,7 @@ import Uploader from "./uploader";
 import { OtherProfile } from "./otherprofile";
 import { FindPeople } from "./findpeople";
 import Friends from "./friends";
+import Chat from "./chat";
 
 const AppContainer = styled.div`
     height: 100vh;
@@ -183,6 +184,22 @@ export default class App extends React.Component {
                                     </NavLink>
                                 </div>
                                 <div>
+                                    {" "}
+                                    <NavLink
+                                        to="/chat"
+                                        style={{
+                                            color: "white",
+                                            textDecoration: "none"
+                                        }}
+                                        activeStyle={{
+                                            color: "black",
+                                            textDecoration: "none"
+                                        }}
+                                    >
+                                        Chat
+                                    </NavLink>
+                                </div>
+                                <div>
                                     <a
                                         href="/logout"
                                         style={{
@@ -229,6 +246,11 @@ export default class App extends React.Component {
                             exact
                             path="/findpeople"
                             render={() => <FindPeople first={this.state.id} />}
+                        />
+                        <Route
+                            exact
+                            path="/chat"
+                            render={() => <Chat first={this.state.id} />}
                         />
                         <Route
                             exact

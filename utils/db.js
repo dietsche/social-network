@@ -86,3 +86,16 @@ exports.getFriendsAndWannabees = function(ownId) {
         [ownId]
     );
 };
+
+exports.getLastTenChatMessages = function() {
+    return db.query(
+        `SELECT message_id, message, user_id, created_at FROM chatMessages`
+    );
+};
+
+exports.addNewMessage = function(msg, user_id) {
+    return db.query(
+        `INSERT INTO chatmessages (message, user_id) VALUES ($1, $2) RETURNING *`,
+        [msg, user_id]
+    );
+};

@@ -1,13 +1,18 @@
 const express = require("express");
 const app = express();
+
+const server = require("http").Server(app); //app is given to secondary server; for requests that are not normal http
+const io = require("socket.io")(server, { origins: "localhost:8080" }); //for deploying add (seperated by spaces): "mysocialapp.herokuapp.com:*"
+
 const compression = require("compression");
 const cookieSession = require("cookie-session");
-const db = require("./utils/db"); //we need it???
+const db = require("./utils/db");
 const { hash, compare } = require("./utils/bc");
 const csurf = require("csurf");
 const multer = require("multer");
 const uidSafe = require("uid-safe");
 const path = require("path");
+
 const s3 = require("./s3");
 const { s3Url } = require("./config.json");
 
@@ -36,12 +41,15 @@ app.use(compression());
 app.use(express.json());
 app.use(express.static("./public"));
 
-app.use(
-    cookieSession({
-        secret: `I'm always angry.`,
-        maxAge: 1000 * 60 * 60 * 24 * 14
-    })
-);
+const cookieSessionMiddleware = cookieSession({
+    secret: `I'm always angry.`,
+    maxAge: 1000 * 60 * 60 * 24 * 90
+});
+
+app.use(cookieSessionMiddleware);
+io.use(function(socket, next) {
+    cookieSessionMiddleware(socket.request, socket.request.res, next);
+});
 
 app.use(csurf());
 
@@ -336,6 +344,72 @@ app.get("*", function(req, res) {
     }
 });
 
-app.listen(8080, function() {
+server.listen(8080, function() {
     console.log("I'm listening.");
 });
+
+io.on("connection", function(socket) {
+    console.log(`socket with the id ${socket.id} is now connected`);
+    if (!socket.request.session.userId) {
+        return socket.disconnect(true);
+    }
+
+    let userId = socket.request.session.userId;
+    let message;
+    db.getLastTenChatMessages().then(data => {
+        io.socket.emit("chatMessages", data.rows.reverse());
+    });
+
+    /* ... */
+    socket.on("newChatMessage", msg => {
+        console.log("msg on the server: ", msg);
+        console.log("userID: ", userId);
+        db.addNewMessage(msg, userId)
+            .then(data => {
+                console.log("returned from db.addNewMessage: ", data.rows);
+                message = data.rows;
+                console.log("1st part ", data.rows);
+            })
+            .then(
+                db.getUserData(userId).then(data => {
+                    console.log("2nd part: ", data.rows);
+                    let newMessageObject = {
+                        ...data.rows[0],
+                        ...message[0]
+                    };
+                    delete newMessageObject.password;
+                    delete newMessageObject.email;
+                    delete newMessageObject.bio;
+
+                    console.log("newMessageObject ", newMessageObject);
+                    socket.emit("newMessageToClient", data.rows);
+                })
+            )
+            .catch(err => {
+                console.log(err);
+            });
+
+        //than add it to
+        // then emit this object to everyone
+    });
+});
+
+// io.on("connection", socket => {
+//     socket.emit("hello", {
+//         message: "nice to see you"
+//     });
+//     io.sockets.sockets[socket.id].emit("...", {}); //Message geht nur an Nutzer mit bestimmer socket.id!
+//     io.sockets.emit("someOneNew", {
+//         //io.sockets > Message to ALL connected clients
+//         message: "...."
+//     });
+//     socket.broadcast.emit("someOneNew", {
+//         //socket.broadcast > Message to ALL BUT the sender(?) clients
+//         message: "...."
+//     });
+//
+//     console.log(`Socket with the id ${socket.id} connected!`);
+//     socket.on("disconnect", () => {
+//         console.log(`Socket with the id ${socket.id} disconnected!`);
+//     });
+// }); //"socket" > object that represents a server connection

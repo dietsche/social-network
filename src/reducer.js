@@ -33,6 +33,27 @@ export default function reducer(state = {}, action) {
         };
     }
 
+    if (action.type == "GET_CHATMESSAGES") {
+        state = {
+            ...state,
+            chatMessages: action.chatMessages
+        };
+    }
+
+    if (action.type == "NEW_MESSAGE") {
+        state = {
+            ...state,
+            chatMessages: [...state.chatMessages, action.message]
+        };
+    }
+
+    if (action.type == "ONLINE_LIST") {
+        state = {
+            ...state,
+            onlineList: action.list
+        };
+    }
+
     console.log("reducer: state ended as: ", state);
     return state;
 }

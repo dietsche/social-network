@@ -13,6 +13,7 @@ export const ProfileContainer = styled.div`
     flex-direction: column;
     width: 100%;
     padding: 10px;
+
     /* justify-content: center; */
     align-items: center;
     h1 {

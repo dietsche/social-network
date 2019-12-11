@@ -31,3 +31,27 @@ export async function unfriend(id) {
         id
     };
 }
+
+export function loadChatMessages(chatMessages) {
+    console.log("chatMessages: ", chatMessages);
+    return {
+        type: "GET_CHATMESSAGES",
+        chatMessages
+    };
+}
+
+export function newChatMessage(message) {
+    console.log("newMessage: ", message);
+    return {
+        type: "NEW_MESSAGE",
+        message
+    };
+}
+
+export function updateOnlineList(list) {
+    console.log("list: ", list);
+    return {
+        type: "ONLINE_LIST",
+        list
+    };
+}

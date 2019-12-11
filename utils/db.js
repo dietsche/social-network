@@ -89,13 +89,22 @@ exports.getFriendsAndWannabees = function(ownId) {
 
 exports.getLastTenChatMessages = function() {
     return db.query(
-        `SELECT message_id, message, user_id, created_at FROM chatMessages`
+        `SELECT chatmessages.message_id, chatmessages.message, chatmessages.user_id,
+        chatmessages.created_at, users.first, users.last, users.image FROM chatmessages
+        LEFT JOIN users ON chatmessages.user_id = users.id ORDER BY chatmessages.message_id DESC LIMIT 10 `
+    );
+};
+
+exports.getLatestChatMessage = function(message_id) {
+    return db.query(
+        `SELECT chatmessages.message_id, chatmessages.message, chatmessages.user_id, chatmessages.created_at, users.first, users.last, users.image FROM chatmessages LEFT JOIN users ON chatmessages.user_id = users.id WHERE chatmessages.message_id = $1`,
+        [message_id]
     );
 };
 
 exports.addNewMessage = function(msg, user_id) {
     return db.query(
-        `INSERT INTO chatmessages (message, user_id) VALUES ($1, $2) RETURNING *`,
+        `INSERT INTO chatmessages (message, user_id) VALUES ($1, $2) RETURNING message_id`,
         [msg, user_id]
     );
 };

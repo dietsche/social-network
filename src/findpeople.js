@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled, { ThemeProvider } from "styled-components";
 import axios from "./axios";
 import { NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 // import { Link } from "react-router";
 
@@ -13,6 +14,7 @@ export const ContainerFindPeople = styled.div`
 `;
 
 export const FindUsers = styled.div`
+    min-width: 340px;
     > input {
         margin: 7px auto;
         padding: 5px;
@@ -56,15 +58,11 @@ export const ContainerUser = styled.div`
 `;
 export function FindPeople() {
     console.log("FindPeople running ");
-    //useState: arrray of user ; string(val of textField)
-    //userEffect: do something when comp mounts (ajax-req to get users; order by id desc limit 3)+ after every render after (new request after new inputvalue)
-    //value of TextField > useState
+    const onlineList = useSelector(state => state && state.onlineList);
+
     const [latestUsers, setLatestUsers] = useState([]);
     const [searchResult, setSearchResult] = useState([]);
     const [val, setVal] = useState();
-    // if (!latestUsers) {
-    //     return null;
-    // }
 
     useEffect(() => {
         console.log("componentDidMount!");
@@ -74,6 +72,10 @@ export function FindPeople() {
             console.log("data: ", data);
         })();
     }, [latestUsers.id]);
+
+    useEffect(() => {
+        console.log("OOOOOOOOOOOOOOOonlineList: ", onlineList);
+    }, []);
 
     useEffect(() => {
         console.log("val: ", val);
@@ -146,6 +148,31 @@ export function FindPeople() {
                             </ContainerUser>
                         </NavLink>
                     ))}
+                </FindUsers>
+                <FindUsers>
+                    <h2> Currently Online </h2>{" "}
+                    {onlineList &&
+                        onlineList.map(user => (
+                            <NavLink
+                                key={user.id}
+                                to={`/user/${user.id}`}
+                                style={{
+                                    color: "black",
+                                    textDecoration: "none"
+                                }}
+                            >
+                                <ContainerUser>
+                                    <div className="image-container">
+                                        <img src={user.image} />{" "}
+                                    </div>
+                                    <div className="name-container">
+                                        <p>
+                                            {user.first} {user.last}
+                                        </p>
+                                    </div>
+                                </ContainerUser>
+                            </NavLink>
+                        ))}
                 </FindUsers>
             </ContainerFindPeople>
         </React.Fragment>

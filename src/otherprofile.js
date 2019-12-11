@@ -4,6 +4,22 @@ import axios from "./axios";
 import { ProfileContainer, PicFrame } from "./profile";
 import { FriendButton } from "./friendship-button";
 
+const OtherProfileContainer = styled.div`
+    display: flex;
+
+    background: ${props => props.theme.primary};
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 10px;
+
+    /* justify-content: center; */
+    align-items: center;
+    h1 {
+        font-size: 22px;
+    }
+`;
+
 const OtherBio = styled.div`
     display: flex;
     flex-direction: column;
@@ -20,6 +36,7 @@ export class OtherProfile extends React.Component {
     componentDidMount() {
         console.log("this.props.match: ", this.props.match);
         console.log("params id: ", this.props.match.params.id);
+
         //axios-request: zuästzlich zu user-data auf id-aus-cookie von server abfragen > kann verglichen werden [wenn wir id als property weitergeben> evtl. Verzögerung!!]
 
         //Set state
@@ -58,7 +75,7 @@ export class OtherProfile extends React.Component {
     }
     render() {
         return (
-            <ProfileContainer>
+            <OtherProfileContainer>
                 <h1>
                     {" "}
                     {this.state.first} {this.state.last}
@@ -71,7 +88,7 @@ export class OtherProfile extends React.Component {
                     otherId={this.props.match.params.id}
                     ownId={this.state.id}
                 />
-            </ProfileContainer>
+            </OtherProfileContainer>
         );
     }
 }

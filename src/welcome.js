@@ -14,7 +14,7 @@ const Header = styled.div`
         margin-top: 20px;
     }
     img {
-        width: 10vw;
+        width: 20vw;
         margin: 20px;
     }
 `;
@@ -80,8 +80,8 @@ export default function Welcome() {
     return (
         <React.Fragment>
             <Header>
-                <img src="/img/robin.png" />
-                <h1>Welcome to my Social Network</h1>
+                <img src="/img/logo.png" />
+                <h1>lame - the lazy messenger</h1>
             </Header>
 
             <HashRouter>

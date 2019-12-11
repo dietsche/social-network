@@ -15,6 +15,7 @@ const path = require("path");
 
 const s3 = require("./s3");
 const { s3Url } = require("./config.json");
+let onlineUsers = [];
 
 const diskStorage = multer.diskStorage({
     destination: function(req, file, callback) {
@@ -355,36 +356,60 @@ io.on("connection", function(socket) {
     }
 
     let userId = socket.request.session.userId;
-    let message;
-    db.getLastTenChatMessages().then(data => {
-        io.socket.emit("chatMessages", data.rows.reverse());
+    db.getUserData(userId).then(data => {
+        let { first, last, image, id } = data.rows[0];
+        console.log("first, last, image: ", first, last, image, id);
+        let newOnlineUser = {
+            socketid: socket.id,
+            first: first,
+            last: last,
+            image: image,
+            id: id
+        };
+
+        let checkIfNew = true;
+        onlineUsers.map(item => {
+            if (item.id === newOnlineUser.id) {
+                console.log("CHECK FOR NEW USER: ", item.id, newOnlineUser.id);
+                checkIfNew = false;
+            }
+        });
+
+        if (checkIfNew !== false) {
+            console.log("CHECK IF NEW TRUE!!!");
+            onlineUsers.push(newOnlineUser);
+        }
+
+        io.sockets.emit("usersOnlineList", onlineUsers);
     });
+
+    //put in on other users profile
+
+    db.getLastTenChatMessages()
+        .then(data => {
+            io.sockets.emit("chatMessages", data.rows.reverse());
+            console.log("data.rows.reverse(): ", data.rows.reverse());
+        })
+
+        .catch(err => {
+            console.log(err);
+        });
 
     /* ... */
     socket.on("newChatMessage", msg => {
         console.log("msg on the server: ", msg);
         console.log("userID: ", userId);
+        userId = socket.request.session.userId;
+
         db.addNewMessage(msg, userId)
             .then(data => {
-                console.log("returned from db.addNewMessage: ", data.rows);
-                message = data.rows;
-                console.log("1st part ", data.rows);
+                let messageId = data.rows[0].message_id;
+                db.getLatestChatMessage(messageId).then(data => {
+                    console.log("lates message before emiting ", data.rows[0]);
+                    io.sockets.emit("additionalMessage", data.rows[0]);
+                });
             })
-            .then(
-                db.getUserData(userId).then(data => {
-                    console.log("2nd part: ", data.rows);
-                    let newMessageObject = {
-                        ...data.rows[0],
-                        ...message[0]
-                    };
-                    delete newMessageObject.password;
-                    delete newMessageObject.email;
-                    delete newMessageObject.bio;
 
-                    console.log("newMessageObject ", newMessageObject);
-                    socket.emit("newMessageToClient", data.rows);
-                })
-            )
             .catch(err => {
                 console.log(err);
             });
@@ -392,24 +417,9 @@ io.on("connection", function(socket) {
         //than add it to
         // then emit this object to everyone
     });
+    socket.on("disconnect", () => {
+        onlineUsers = onlineUsers.filter(function(obj) {
+            return obj.socketid !== socket.id;
+        });
+    });
 });
-
-// io.on("connection", socket => {
-//     socket.emit("hello", {
-//         message: "nice to see you"
-//     });
-//     io.sockets.sockets[socket.id].emit("...", {}); //Message geht nur an Nutzer mit bestimmer socket.id!
-//     io.sockets.emit("someOneNew", {
-//         //io.sockets > Message to ALL connected clients
-//         message: "...."
-//     });
-//     socket.broadcast.emit("someOneNew", {
-//         //socket.broadcast > Message to ALL BUT the sender(?) clients
-//         message: "...."
-//     });
-//
-//     console.log(`Socket with the id ${socket.id} connected!`);
-//     socket.on("disconnect", () => {
-//         console.log(`Socket with the id ${socket.id} disconnected!`);
-//     });
-// }); //"socket" > object that represents a server connection

@@ -62,7 +62,7 @@ export const PersonBox = styled.div`
         width: 200px;
     }
     button {
-        background-color: rgb(220, 220, 220);
+        background-color: rgb(111, 185, 143);
         height: 28px;
         border: 3px rgba(0, 0, 0, 0) solid;
         border-radius: 3px;

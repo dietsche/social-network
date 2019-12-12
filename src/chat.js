@@ -1,11 +1,10 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { socket } from "./socket";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { getRhyme } from "./getrhymes";
 
 var moment = require("moment");
-let repeatRhyme = false;
 let everySecondTime = true;
 
 export const ChatContainer = styled.div`
@@ -70,42 +69,37 @@ export const EnterMessage = styled.div`
         justify-content: center;
         align-items: center;
         text-align: center;
-        font-size: 13px;
-        width: 70px;
-        height: 70px;
+        font-size: 16px;
+        width: 60px;
+        height: 60px;
         border-radius: 50%;
         margin: 5px 10px;
         cursor: pointer;
+        img {
+            margin-top: 5px;
+            postion: absolute;
+        }
     }
-    .lame {
-        background-color: rgb(104, 255, 104);
-    }
-    .lame2 {
+    > div:hover,
+    .active {
         background-color: rgb(0, 204, 0);
     }
 `;
-
-export function insertRhyme(rhyme) {
-    console.log("currentRhyme: ", rhyme);
-    socket.emit("newChatMessage", rhyme);
-}
 
 export default function Chat() {
     const chatMessages = useSelector(state => state && state.chatMessages);
     let currentRhyme;
     const elemRef = useRef();
+    const [repeatRhyme, setRepeatRhyme] = useState(false);
 
     useEffect(() => {
-        console.log("chat mounted!");
-        console.log("repeatRhyme: ", repeatRhyme);
-        console.log("elemRef.current: ", elemRef.current);
         elemRef.current.scrollTop =
             elemRef.current.scrollHeight - elemRef.current.clientHeight;
         if (repeatRhyme == true) {
+            everySecondTime = !everySecondTime;
             console.log("repeat true");
             everySecondTime &&
-                getRhyme(chatMessages[chatMessages.length - 1].message);
-            everySecondTime = !everySecondTime;
+                showRhyme(chatMessages[chatMessages.length - 1].message);
         }
     }, [chatMessages]);
 
@@ -124,21 +118,17 @@ export default function Chat() {
                 chatMessages[chatMessages.length - 1].message
             );
             console.log("!!!!!!!!!!!!!!!current r : ", currentRhyme);
+            socket.emit("newChatMessage", currentRhyme);
         } catch (error) {
-            console.log("error: ", error);
+            console.log("error in showRhyme: ", error);
+            setRepeatRhyme(false);
         }
     }
 
-    function initRhyme() {
-        showRhyme().then(response => {
-            console.log("!!!!!!!!!!!!!!currentRhyme:", response);
-        });
-        repeatRhyme = false;
-    }
-
     function initRepeatedRhyme() {
-        console.log("rr set to true");
-        repeatRhyme = true;
+        setRepeatRhyme(!repeatRhyme);
+        everySecondTime = true;
+        showRhyme();
     }
 
     return (
@@ -178,14 +168,24 @@ export default function Chat() {
                     placeholder="add your message here..."
                     onKeyUp={keyCheck}
                 ></textarea>
-                <div className="lame" onClick={initRhyme}>
-                    <div>autoreply</div>
+                <div onClick={showRhyme}>
+                    <div></div>
+                    <img src="img/reply.png" />
                     <strong>1x</strong>
                 </div>
-                <div className="lame2" onClick={initRepeatedRhyme}>
-                    <div>autoreply</div>
-                    <strong>++</strong>{" "}
-                </div>
+                {repeatRhyme ? (
+                    <div className="active" onClick={initRepeatedRhyme}>
+                        <div></div>
+                        <img src="img/reply.png" />
+                        <strong>++</strong>{" "}
+                    </div>
+                ) : (
+                    <div onClick={initRepeatedRhyme}>
+                        <div></div>
+                        <img src="img/reply.png" />
+                        <strong>++</strong>{" "}
+                    </div>
+                )}
             </EnterMessage>
         </ChatContainer>
     );

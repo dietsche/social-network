@@ -18,7 +18,6 @@ export async function getRhyme(lastMessage) {
         "I just say:",
         "I don't want the",
         "Let me just say:",
-        "We've never talked about",
         "I don't want to speak about the",
         "I'm intereted in the",
         "I know everything about the",
@@ -46,7 +45,9 @@ export async function getRhyme(lastMessage) {
         "I'm interested in",
         "I know everything about",
         "Tell me more about",
-        "I don't care about"
+        "I don't care about",
+        "By the way:",
+        "Let's not forget"
     ];
     let randomSentence;
     let rhymedAnswer;
@@ -64,7 +65,7 @@ export async function getRhyme(lastMessage) {
     let rhymedWords = await axios.get(
         "http://api.datamuse.com/words?rel_rhy=" +
             currentValueLastWord +
-            "&max=1000&md=p&lc=the"
+            "&max=1000&md=p"
     );
 
     console.log("rhymedWords: ", rhymedWords);
@@ -79,14 +80,15 @@ export async function getRhyme(lastMessage) {
     let randomRhymedWordContext = await axios.get(
         "http://api.datamuse.com/words?lc=" + rhymedWordsNouns[index].word
     );
-    console.log("randomRhymedWord: ", randomRhymedWordContext);
+    console.log("randomRhymedWordContext: ", randomRhymedWordContext);
+    theWordBefore = "n";
+
     for (
         let i = 0;
         i < Math.floor(randomRhymedWordContext.data.length * 0.5);
         i++
     ) {
         console.log("SCHLEIFE", randomRhymedWordContext.data[i].word);
-        theWordBefore = "n";
         if (randomRhymedWordContext.data[i].word == "the") {
             theWordBefore = "the";
         } else if (randomRhymedWordContext.data[i].word == "a") {

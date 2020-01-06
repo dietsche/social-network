@@ -1,6 +1,4 @@
 export default function reducer(state = {}, action) {
-    console.log("state in reducer: ", state);
-
     if (action.type == "RECEIVE_FRIENDS_AND_WANNABEES") {
         state = {
             ...state,
@@ -54,6 +52,5 @@ export default function reducer(state = {}, action) {
         };
     }
 
-    console.log("reducer: state ended as: ", state);
     return state;
 }

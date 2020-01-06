@@ -1,6 +1,5 @@
 import React from "react";
-import axios from "./axios"; //not directly from axis, but our own version
-import styled from "styled-components";
+import axios from "./axios";
 import { Link } from "react-router-dom";
 import { Form } from "./start";
 
@@ -11,25 +10,16 @@ export default class Register extends React.Component {
     }
 
     submit() {
-        console.log("registration.js: Submit-func running");
-        console.log(this.email);
-        console.log(this.first);
-        console.log(this.last);
-        console.log(this.password);
         axios
             .post("/registration", {
-                email: this.email, //State ist eigentliche for detecting changes on screen and reacting
+                email: this.email,
                 password: this.password,
                 first: this.first,
                 last: this.last
-                // image: this.image,
-                // bio: this.bio
             })
             .then(({ data }) => {
-                console.log("registration.js: axios-post .then");
                 if (data.success) {
-                    console.log("...");
-                    location.replace("/"); //replace> page in history is replaced in history > you cant go back in browser!!!!
+                    location.replace("/");
                 } else {
                     this.setState({
                         error: true
@@ -38,8 +28,6 @@ export default class Register extends React.Component {
             });
     }
     handleChange(inputElement) {
-        console.log(inputElement.target.name);
-        console.log(inputElement.target.value);
         this[inputElement.target.name] = inputElement.target.value;
     }
     render() {

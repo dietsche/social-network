@@ -72,10 +72,5 @@ if (location.pathname != "/welcome") {
         </Provider>
     );
 }
-// change to:
-// <Provider store={store}>
-//     <App />
-//     <GlobalStyle />
-// </Provider>
 
 ReactDOM.render(elem, document.querySelector("main"));

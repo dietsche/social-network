@@ -13,8 +13,6 @@ export const ProfileContainer = styled.div`
     flex-direction: column;
     width: 100%;
     padding: 10px;
-
-    /* justify-content: center; */
     align-items: center;
     h1 {
         font-size: 22px;
@@ -37,16 +35,7 @@ export const PicFrame = styled.div`
     }
 `;
 
-export function Profile({
-    first,
-    last,
-    image,
-    bio,
-    updateBio,
-    id,
-    toggleModal
-}) {
-    console.log("profile running; currentID: ", id);
+export function Profile({ first, last, image, bio, updateBio, toggleModal }) {
     return (
         <ThemeProvider theme={theme}>
             <ProfileContainer>

@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import axios from "./axios";
-import { ProfileContainer, PicFrame } from "./profile";
+import { PicFrame } from "./profile";
 import { FriendButton } from "./friendship-button";
 
 const OtherProfileContainer = styled.div`
@@ -12,8 +12,6 @@ const OtherProfileContainer = styled.div`
     flex-direction: column;
     width: 100%;
     padding: 10px;
-
-    /* justify-content: center; */
     align-items: center;
     h1 {
         font-size: 22px;
@@ -34,24 +32,10 @@ export class OtherProfile extends React.Component {
         this.state = {};
     }
     componentDidMount() {
-        console.log("this.props.match: ", this.props.match);
-        console.log("params id: ", this.props.match.params.id);
-
-        //axios-request: zuästzlich zu user-data auf id-aus-cookie von server abfragen > kann verglichen werden [wenn wir id als property weitergeben> evtl. Verzögerung!!]
-
-        //Set state
-
-        //eigene Seite: redirection: this.props.match.params.id && [eigene Id] >> this.props.history.push("/");
-
         axios
             .get("/api/otheruser/" + this.props.match.params.id)
             .then(({ data }) => {
                 if (data.success) {
-                    console.log(
-                        "data when app-component mounts: ",
-                        data.first,
-                        data.last
-                    );
                     this.setState(
                         {
                             first: data.first,
@@ -65,7 +49,6 @@ export class OtherProfile extends React.Component {
                         }
                     );
                 } else {
-                    console.log("ERROR");
                     this.setState({
                         error: true
                     });

@@ -97,7 +97,6 @@ export default function Chat() {
             elemRef.current.scrollHeight - elemRef.current.clientHeight;
         if (repeatRhyme == true) {
             everySecondTime = !everySecondTime;
-            console.log("repeat true");
             everySecondTime &&
                 showRhyme(chatMessages[chatMessages.length - 1].message);
         }
@@ -110,17 +109,13 @@ export default function Chat() {
         }
     };
 
-    console.log("chatMessages before return: ", chatMessages);
-
     async function showRhyme() {
         try {
             currentRhyme = await getRhyme(
                 chatMessages[chatMessages.length - 1].message
             );
-            console.log("!!!!!!!!!!!!!!!current r : ", currentRhyme);
             socket.emit("newChatMessage", currentRhyme);
         } catch (error) {
-            console.log("error in showRhyme: ", error);
             setRepeatRhyme(false);
         }
     }

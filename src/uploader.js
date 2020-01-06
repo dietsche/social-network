@@ -1,5 +1,5 @@
 import React from "react";
-import axios from "./axios"; //not directly from axis, but our own version
+import axios from "./axios";
 import styled from "styled-components";
 
 const ModalContainer = styled.div`
@@ -93,31 +93,22 @@ export default class Uploader extends React.Component {
     }
 
     sendImage(url) {
-        console.log("sendImage runs");
-        console.log(url);
         this.props.sendImageToApp(url);
     }
 
-    componentDidMount() {
-        console.log("uploader mounted");
-        console.log("this.props ", this.props);
-    }
+    componentDidMount() {}
 
     handleChange(e) {
-        console.log("e.target.files[0]", e.target.files[0]);
         this.setState({ file: e.target.files[0] });
         this.setState({ imageLoaded: true });
     }
 
     handleClick() {
-        console.log("thisfile:", this.state.file);
         var fd = new FormData();
         fd.append("file", this.state.file);
         let me = this;
 
         axios.post("/uploadImage", fd).then(function(resp) {
-            console.log("resp.data.image: ", resp.data.image);
-            // console.log("htis props: ", this.props);
             me.sendImage(resp.data.image);
         });
     }

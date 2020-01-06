@@ -8,7 +8,6 @@ export const init = store => {
     if (!socket) {
         socket = io.connect();
 
-        //All out dispatches of actions will go in here...
         socket.on("usersOnlineList", usersOnlineList => {
             store.dispatch(updateOnlineList(usersOnlineList));
         });
@@ -16,8 +15,6 @@ export const init = store => {
         socket.on("chatMessages", chatMessages =>
             store.dispatch(loadChatMessages(chatMessages))
         );
-
-        // socket.on("newChatMessage", msg => ));
 
         socket.on("additionalMessage", msg => {
             store.dispatch(newChatMessage(msg));

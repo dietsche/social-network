@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
-import styled, { ThemeProvider } from "styled-components";
+import styled from "styled-components";
 import axios from "./axios";
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
-
-// import { Link } from "react-router";
 
 export const ContainerFindPeople = styled.div`
     display: flex;
@@ -57,7 +55,6 @@ export const ContainerUser = styled.div`
     }
 `;
 export function FindPeople() {
-    console.log("FindPeople running ");
     const onlineList = useSelector(state => state && state.onlineList);
 
     const [latestUsers, setLatestUsers] = useState([]);
@@ -65,25 +62,17 @@ export function FindPeople() {
     const [val, setVal] = useState();
 
     useEffect(() => {
-        console.log("componentDidMount!");
         (async () => {
             const { data } = await axios.get(`/api/findlatestusers`);
             setLatestUsers(data.latestUsers);
-            console.log("data: ", data);
         })();
     }, [latestUsers.id]);
 
     useEffect(() => {
-        console.log("OOOOOOOOOOOOOOOonlineList: ", onlineList);
-    }, []);
-
-    useEffect(() => {
-        console.log("val: ", val);
         let ignore = false;
         (async () => {
             const { data } = await axios.get(`/api/searchusers/` + val);
             if (!ignore) {
-                console.log(data.searchResult);
                 setSearchResult(data.searchResult);
             } else {
                 setSearchResult([]);
@@ -97,10 +86,7 @@ export function FindPeople() {
             <ContainerFindPeople>
                 <FindUsers>
                     <h2>Search users </h2>{" "}
-                    <input
-                        // defaultValue={greetee.val}
-                        onChange={e => setVal(e.target.value)}
-                    />
+                    <input onChange={e => setVal(e.target.value)} />
                     {searchResult &&
                         searchResult.map(user => (
                             <NavLink

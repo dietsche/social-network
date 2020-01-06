@@ -64,10 +64,7 @@ export default class BioEditor extends React.Component {
     }
 
     componentDidMount() {
-        console.log("props in bioeditor: ", this.props);
         if (!this.props.bio) {
-            //PROBLEM: props bei componentDidMount noch nicht da!!! Solution: in render: this.props.bio ? buttonText = "Efdit..." : buttonText = "Add.." ; und unten nicht auf state verweisen, sondern auf Variable
-            // cooler: staic getDerivedStateFromProps(props, state) {.....} => achtet auf Props-Änderungen!
             this.setState(
                 {
                     buttonText: "Add your bio"
@@ -104,7 +101,6 @@ export default class BioEditor extends React.Component {
                     <textarea
                         onChange={this.handleChange}
                         defaultValue={this.props.bio}
-                        // value={this.state.bioText}
                         placeholder="Please enter your bio."
                     />
                     <button onClick={this.sendUpdateInfo}> Save </button>

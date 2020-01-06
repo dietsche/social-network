@@ -1,5 +1,5 @@
 import React from "react";
-import axios from "./axios"; //not directly from axis, but our own version
+import axios from "./axios";
 import { BrowserRouter, Route, NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { Profile } from "./profile";
@@ -68,12 +68,8 @@ export default class App extends React.Component {
         this.updateBio = this.updateBio.bind(this);
     }
     componentDidMount() {
-        console.log("app componentDidMount");
-
         axios.get("/api/user").then(({ data }) => {
-            console.log("app.js: axios-get");
             if (data.success) {
-                console.log("data when app-component mounts: ", data);
                 this.setState({
                     first: data.first,
                     last: data.last,
@@ -81,9 +77,7 @@ export default class App extends React.Component {
                     bio: data.bio,
                     id: data.id
                 });
-                // location.replace("/"); //replace> page in history is replaced in history > you cant go back in browser!!!!
             } else {
-                console.log("ERROR");
                 this.setState({
                     error: true
                 });
@@ -95,10 +89,8 @@ export default class App extends React.Component {
     }
 
     updateBio(bioText) {
-        console.log("UpdateBIO runs!!!!!!:", bioText);
         let me = this;
         axios.post("/updateBio", { bio: bioText }).then(function(resp) {
-            console.log("bioupdate resp.data: ", resp.data.bio);
             me.setState(
                 {
                     bio: resp.data.bio
@@ -107,22 +99,17 @@ export default class App extends React.Component {
                     "state of bio is set to new value";
                 }
             );
-
-            // console.log("htis props: ", this.props);
         });
     }
 
     toggleModal() {
-        console.log("toogle modal is running!");
         this.setState({
             uploaderIsVisible: !this.state.uploaderIsVisible
         });
     }
 
     render() {
-        //const {id, ...} =this.state
         if (!this.state.first) {
-            //Seite lädt erst wenn INhalt da ist!!!! HIER AUCH SPINNER MÖGLICH!!!
             return null;
         }
         return (
